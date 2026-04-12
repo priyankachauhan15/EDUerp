@@ -23,15 +23,29 @@ const app = express();
 connectDB();
 
 // ✅ Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ed-uerp.vercel.app"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",        // local frontend
-      "https://ed-uerp.vercel.app"     // your deployed frontend
-    ],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
+
+// 🔥 VERY IMPORTANT (handles preflight)
+app.options("*", cors());
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
