@@ -23,7 +23,13 @@ const app = express();
 connectDB();
 
 // ✅ Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://your-vercel-app.vercel.app", // 🔁 Replace with your frontend URL
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
@@ -44,10 +50,18 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// ✅ DB Status Route (for testing)
+// ✅ DB Status Route
 app.get("/check-db", (req, res) => {
   res.json({
     message: "DB Connected Successfully ✅",
+  });
+});
+
+// ❗ Error Handling Middleware (IMPORTANT)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "Something went wrong",
   });
 });
 
