@@ -27,7 +27,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",        // local frontend
-      "https://eduerp.vercel.app"     // your deployed frontend
+      "https://ed-uerp.vercel.app"     // your deployed frontend
     ],
     credentials: true,
   })
