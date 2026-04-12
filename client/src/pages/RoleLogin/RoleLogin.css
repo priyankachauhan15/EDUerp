@@ -1,0 +1,41 @@
+.role-container{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;
+}
+
+.role-container h1{
+margin-bottom:40px;
+font-size:40px;
+}
+
+.role-box{
+display:flex;
+gap:40px;
+}
+
+.role-box button{
+padding:18px 35px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:white;
+color:#333;
+font-weight:bold;
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.role-box button:hover{
+background:#2c3e50;
+color:white;
+}
+
+@media(max-width:600px){
+.role-box{
+flex-direction:column;
+}
+}

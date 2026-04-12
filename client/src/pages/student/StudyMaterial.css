@@ -1,0 +1,40 @@
+.material-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.material-card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+transition:0.2s;
+text-align:center;
+}
+
+.material-card:hover{
+transform:translateY(-5px);
+}
+
+.material-card h3{
+color:#0f172a;
+margin-bottom:8px;
+}
+
+.material-card p{
+color:#64748b;
+margin-bottom:15px;
+}
+
+.material-card button{
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+}
+
+.material-card button:hover{
+background:#1d4ed8;
+}

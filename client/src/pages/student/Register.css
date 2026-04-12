@@ -1,0 +1,30 @@
+.register-container{
+max-width:600px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.register-container form{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.register-container input,
+.register-container select{
+padding:10px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+.register-container button{
+grid-column:span 2;
+padding:12px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:6px;
+}
