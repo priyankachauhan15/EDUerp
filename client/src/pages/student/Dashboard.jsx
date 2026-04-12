@@ -64,15 +64,15 @@ function Dashboard() {
 
       const [subjectsRes, attendanceRes, econtentRes] = await Promise.all([
         axios.get(
-          `http://localhost:5000/api/subjects?department=${department}`,
+          `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`,
           config
         ),
         axios.get(
-          `http://localhost:5000/api/attendance/student/${studentId}`,
+          `https://eduerp-y7bk.onrender.com/api/attendance/student/${studentId}`,
           config
         ),
         axios.get(
-          `http://localhost:5000/api/econtent?department=${department}`,
+          `https://eduerp-y7bk.onrender.com/api/econtent?department=${department}`,
           config
         ),
       ]);

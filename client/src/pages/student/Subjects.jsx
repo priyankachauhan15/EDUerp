@@ -18,7 +18,7 @@ function StudentSubjects() {
       setError("");
 
       const res = await axios.get(
-        `http://localhost:5000/api/subjects?department=${dept}`,
+        `https://eduerp-y7bk.onrender.com/api/subjects?department=${dept}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

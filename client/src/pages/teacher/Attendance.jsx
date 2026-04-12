@@ -46,9 +46,9 @@ function TeacherAttendance() {
       const config = getAuthConfig();
 
       const res = await axios.get(
-        `http://localhost:5000/api/students?department=${department}`,
-        config
-      );
+  `https://eduerp-y7bk.onrender.com/api/students?department=${department}`,
+  config
+);
 
       setStudents(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -75,9 +75,9 @@ function TeacherAttendance() {
       const config = getAuthConfig();
 
       const res = await axios.get(
-        `http://localhost:5000/api/subjects?department=${department}`,
-        config
-      );
+  `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`,
+  config
+);
 
       setSubjects(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -104,7 +104,7 @@ function TeacherAttendance() {
       const config = getAuthConfig();
 
       const res = await axios.get(
-        `http://localhost:5000/api/attendance?department=${department}&subject=${subject}`,
+        `https://eduerp-y7bk.onrender.com/api/attendance?department=${department}&subject=${subject}`,
         config
       );
 
@@ -195,7 +195,7 @@ function TeacherAttendance() {
       const config = getAuthConfig();
 
       await axios.post(
-        "http://localhost:5000/api/attendance/mark",
+        "https://eduerp-y7bk.onrender.com/api/attendance/mark",
         { records },
         config
       );

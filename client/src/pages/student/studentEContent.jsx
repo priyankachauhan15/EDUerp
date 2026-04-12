@@ -17,7 +17,7 @@ function StudentEContent() {
       setError("");
 
       const res = await axios.get(
-        `http://localhost:5000/api/econtent?department=${dept}`,
+        `https://eduerp-y7bk.onrender.com/api/econtent?department=${dept}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

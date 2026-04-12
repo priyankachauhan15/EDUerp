@@ -10,7 +10,7 @@ function SubjectList() {
   useEffect(() => {
     const fetchSubjects = async () => {
       const res = await axios.get(
-        `http://localhost:5000/api/subjects?department=${department}`
+        `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`
       );
       setSubjects(res.data);
     };

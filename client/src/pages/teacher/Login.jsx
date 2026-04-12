@@ -33,10 +33,10 @@ function Login() {
     if (!validate()) return;
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/teacher/login",
-        { empCode, password }
-      );
+     const res = await axios.post(
+  "https://eduerp-y7bk.onrender.com/api/teacher/login",
+  { empCode, password }
+);
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem(

@@ -29,7 +29,7 @@ function Register() {
       console.log("FORM DATA:", form); // 🔍 DEBUG
 
       const res = await axios.post(
-        "http://localhost:5000/api/teacher/register",
+        "https://eduerp-y7bk.onrender.com/api/teacher/register",
         form
       );
 

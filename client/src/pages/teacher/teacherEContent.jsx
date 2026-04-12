@@ -42,7 +42,7 @@ function TeacherEContent() {
       setError("");
 
       const config = getAuthConfig();
-      const res = await axios.get("http://localhost:5000/api/econtent", config);
+      const res = await axios.get("https://eduerp-y7bk.onrender.com/api/econtent", config);
 
       setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -84,7 +84,7 @@ function TeacherEContent() {
       const config = getAuthConfig(true);
 
       await axios.post(
-        "http://localhost:5000/api/econtent/upload",
+        "https://eduerp-y7bk.onrender.com/api/econtent/upload",
         formData,
         config
       );
@@ -114,7 +114,7 @@ function TeacherEContent() {
     try {
       const config = getAuthConfig();
 
-      await axios.delete(`http://localhost:5000/api/econtent/${id}`, config);
+      await axios.delete(`https://eduerp-y7bk.onrender.com/api/econtent/${id}`, config);
       fetchData();
     } catch (err) {
       console.error("Delete error:", err);
@@ -176,7 +176,7 @@ function TeacherEContent() {
                 </p>
 
                 <a
-                  href={`http://localhost:5000/uploads/${item.file}`}
+                  href={`https://eduerp-y7bk.onrender.com/uploads/${item.file}`}
                   target="_blank"
                   rel="noreferrer"
                 >

@@ -26,7 +26,7 @@ function StudentList() {
       }
 
       const res = await axios.get(
-        `http://localhost:5000/api/students?department=${selectedDepartment}`,
+        `https://eduerp-y7bk.onrender.com/api/students?department=${selectedDepartment}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

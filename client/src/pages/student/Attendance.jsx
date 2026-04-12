@@ -23,7 +23,7 @@ function StudentAttendance() {
       setError("");
 
       const res = await axios.get(
-        `http://localhost:5000/api/attendance/student/${studentId}`,
+        `https://eduerp-y7bk.onrender.com/api/attendance/student/${studentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

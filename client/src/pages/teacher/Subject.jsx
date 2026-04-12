@@ -42,7 +42,7 @@ function TeacherSubject() {
       const config = getAuthConfig();
 
       const res = await axios.get(
-        `http://localhost:5000/api/subjects?department=${department}`,
+        `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`,
         config
       );
 
@@ -84,7 +84,7 @@ function TeacherSubject() {
       const config = getAuthConfig();
 
       await axios.post(
-        "http://localhost:5000/api/subjects/add",
+        "https://eduerp-y7bk.onrender.com/api/subjects/add",
         {
           name: name.trim(),
           department,
@@ -116,7 +116,7 @@ function TeacherSubject() {
     try {
       const config = getAuthConfig();
 
-      await axios.delete(`http://localhost:5000/api/subjects/${id}`, config);
+      await axios.delete(`https://eduerp-y7bk.onrender.com/api/subjects/${id}`, config);
       fetchSubjects();
     } catch (err) {
       console.error("Delete subject error:", err);
