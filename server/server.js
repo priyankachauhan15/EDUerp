@@ -25,7 +25,10 @@ connectDB();
 // ✅ Middleware
 app.use(
   cors({
-    origin: "https://your-vercel-app.vercel.app", // 🔁 Replace with your frontend URL
+    origin: [
+      "http://localhost:5173",        // local frontend
+      "https://eduerp.vercel.app"     // your deployed frontend
+    ],
     credentials: true,
   })
 );
