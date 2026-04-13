@@ -16,11 +16,12 @@ function TeacherAttendance() {
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
 
+  // 🔐 Auth config
   const getAuthConfig = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      localStorage.removeItem("teacher");
+      localStorage.clear();
       navigate("/teacher/login");
       throw new Error("No token found");
     }
@@ -32,110 +33,91 @@ function TeacherAttendance() {
     };
   };
 
+  // ⏱️ Lock after 6 PM
   const checkTimeLock = () => {
-    const now = new Date();
-    const hour = now.getHours();
+    const hour = new Date().getHours();
     setIsLocked(hour >= 18);
   };
 
+  // ❌ Handle auth or API errors
+  const handleAuthError = (err, msg) => {
+    console.error("❌ API Error:", err);
+
+    if (err.response?.status === 401) {
+      localStorage.clear();
+      navigate("/teacher/login");
+    } else {
+      setError(err.response?.data?.message || msg);
+    }
+  };
+
+  // 👨‍🎓 Fetch Students
   const fetchStudents = async () => {
     if (!department) return;
 
     try {
       setError("");
-      const config = getAuthConfig();
 
       const res = await axios.get(
-  `https://eduerp-y7bk.onrender.com/api/students?department=${department}`,
-  config
-);
+        `https://eduerp-y7bk.onrender.com/api/students?department=${department}`,
+        getAuthConfig()
+      );
 
       setStudents(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("Fetch students error:", err);
-
-      if (err.response?.status === 401) {
-        setError("Unauthorized. Please login again.");
-        localStorage.removeItem("token");
-        localStorage.removeItem("teacher");
-        navigate("/teacher/login");
-      } else {
-        setError(err.response?.data?.message || "Failed to load students");
-      }
-
-      setStudents([]);
+      handleAuthError(err, "Failed to load students");
     }
   };
 
+  // 📚 Fetch Subjects
   const fetchSubjects = async () => {
     if (!department) return;
 
     try {
       setError("");
-      const config = getAuthConfig();
 
       const res = await axios.get(
-  `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`,
-  config
-);
+        `https://eduerp-y7bk.onrender.com/api/subjects?department=${department}`,
+        getAuthConfig()
+      );
 
       setSubjects(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("Fetch subjects error:", err);
-
-      if (err.response?.status === 401) {
-        setError("Unauthorized. Please login again.");
-        localStorage.removeItem("token");
-        localStorage.removeItem("teacher");
-        navigate("/teacher/login");
-      } else {
-        setError(err.response?.data?.message || "Failed to load subjects");
-      }
-
-      setSubjects([]);
+      handleAuthError(err, "Failed to load subjects");
     }
   };
 
+  // 🔁 Check existing attendance
   const checkExistingAttendance = async () => {
     if (!department || !subject) return;
 
     try {
       setError("");
-      const config = getAuthConfig();
 
       const res = await axios.get(
         `https://eduerp-y7bk.onrender.com/api/attendance?department=${department}&subject=${subject}`,
-        config
+        getAuthConfig()
       );
 
       const todayData = Array.isArray(res.data)
         ? res.data.filter((a) => a.date === today)
         : [];
 
-      if (todayData.length > 0) {
-        const existing = {};
-        todayData.forEach((a) => {
-          existing[a.studentId] = a.status;
-        });
-        setAttendance(existing);
-      } else {
-        setAttendance({});
-      }
+      const existing = {};
+      todayData.forEach((a) => {
+        existing[a.studentId] = a.status;
+      });
 
+      setAttendance(existing);
       checkTimeLock();
     } catch (err) {
-      console.error("Check attendance error:", err);
-
-      if (err.response?.status === 401) {
-        setError("Unauthorized. Please login again.");
-        localStorage.removeItem("token");
-        localStorage.removeItem("teacher");
-        navigate("/teacher/login");
-      } else {
-        setError(err.response?.data?.message || "Failed to check attendance");
-      }
+      handleAuthError(err, "Failed to check attendance");
     }
   };
+
+  useEffect(() => {
+    checkTimeLock();
+  }, []);
 
   useEffect(() => {
     if (department) {
@@ -143,6 +125,11 @@ function TeacherAttendance() {
       fetchSubjects();
       setSubject("");
       setAttendance({});
+    } else {
+      setStudents([]);
+      setSubjects([]);
+      setAttendance({});
+      setSubject("");
     }
   }, [department]);
 
@@ -154,32 +141,19 @@ function TeacherAttendance() {
 
   const handleChange = (id, status) => {
     if (isLocked) return;
+
     setAttendance((prev) => ({
       ...prev,
       [id]: status,
     }));
   };
 
+  // 🚀 Submit attendance
   const handleSubmit = async () => {
-    if (!department) {
-      alert("Select department");
-      return;
-    }
-
-    if (!subject) {
-      alert("Select subject");
-      return;
-    }
-
-    if (isLocked) {
-      alert("Attendance locked after 6 PM");
-      return;
-    }
-
-    if (students.length === 0) {
-      alert("No students found");
-      return;
-    }
+    if (!department) return alert("Select department");
+    if (!subject) return alert("Select subject");
+    if (isLocked) return alert("Attendance locked after 6 PM");
+    if (!students.length) return alert("No students found");
 
     const records = students.map((s) => ({
       studentId: s._id,
@@ -190,28 +164,25 @@ function TeacherAttendance() {
       status: attendance[s._id] || "Absent",
     }));
 
-    try {
-      setError("");
-      const config = getAuthConfig();
+    console.log("📤 Sending attendance records:", records);
 
-      await axios.post(
+    try {
+      const response = await axios.post(
         "https://eduerp-y7bk.onrender.com/api/attendance/mark",
         { records },
-        config
+        getAuthConfig()
       );
 
-      alert("Attendance Saved / Updated");
+      console.log("✅ Attendance response:", response.data);
+      alert(response.data.message || "Attendance saved successfully");
+      checkExistingAttendance();
     } catch (err) {
-      console.error("Submit attendance error:", err);
+      console.error("❌ FULL ERROR:", err);
 
-      if (err.response?.status === 401) {
-        setError("Unauthorized. Please login again.");
-        localStorage.removeItem("token");
-        localStorage.removeItem("teacher");
-        navigate("/teacher/login");
-      } else {
-        alert(err.response?.data?.message || "Error while saving attendance");
-      }
+      const backendMsg =
+        err.response?.data?.message || "Server error while saving attendance";
+
+      alert(backendMsg);
     }
   };
 
@@ -219,86 +190,63 @@ function TeacherAttendance() {
     <TeacherLayout>
       <div className="attendance-page">
         <div className="attendance-card">
-          <div className="attendance-header">
-            <h2>Mark Attendance</h2>
-            <p>Date: {today}</p>
-          </div>
-
-          {isLocked && (
-            <p className="lock-message">🔒 Attendance locked after 6 PM</p>
-          )}
+          <h2>Mark Attendance</h2>
 
           {error && <p className="error-message">{error}</p>}
 
-          <div className="attendance-controls">
-            <select
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              <option value="">Select Department</option>
-              <option value="BCA">BCA</option>
-              <option value="BBA">BBA</option>
-              <option value="MCA">MCA</option>
-            </select>
+          <select
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+          >
+            <option value="">Select Department</option>
+            <option value="BCA">BCA</option>
+            <option value="BBA">BBA</option>
+            <option value="MCA">MCA</option>
+          </select>
 
-            <select
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              disabled={!department}
-            >
-              <option value="">Select Subject</option>
-              {subjects.map((s) => (
-                <option key={s._id} value={s.name}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            disabled={!department}
+          >
+            <option value="">Select Subject</option>
+            {subjects.map((s) => (
+              <option key={s._id} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
 
           <div className="student-list">
-            {students.length > 0 ? (
-              students.map((s) => (
-                <div className="student-row" key={s._id}>
-                  <div className="student-name">{s.name}</div>
+            {students.map((s) => (
+              <div key={s._id} className="student-row">
+                <span>{s.name}</span>
 
-                  <div className="attendance-buttons">
-                    <button
-                      className={
-                        attendance[s._id] === "Present"
-                          ? "btn present active-present"
-                          : "btn present"
-                      }
-                      disabled={isLocked}
-                      onClick={() => handleChange(s._id, "Present")}
-                    >
-                      Present
-                    </button>
+                <button
+                  type="button"
+                  onClick={() => handleChange(s._id, "Present")}
+                  disabled={isLocked}
+                >
+                  Present
+                </button>
 
-                    <button
-                      className={
-                        attendance[s._id] === "Absent"
-                          ? "btn absent active-absent"
-                          : "btn absent"
-                      }
-                      disabled={isLocked}
-                      onClick={() => handleChange(s._id, "Absent")}
-                    >
-                      Absent
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="empty-text">No students found</p>
-            )}
+                <button
+                  type="button"
+                  onClick={() => handleChange(s._id, "Absent")}
+                  disabled={isLocked}
+                >
+                  Absent
+                </button>
+
+                <strong style={{ marginLeft: "10px" }}>
+                  {attendance[s._id] || "Absent"}
+                </strong>
+              </div>
+            ))}
           </div>
 
-          <button
-            className="submit-btn"
-            disabled={isLocked || !department || !subject || students.length === 0}
-            onClick={handleSubmit}
-          >
-            Submit Attendance
+          <button type="button" onClick={handleSubmit} disabled={isLocked}>
+            Submit
           </button>
         </div>
       </div>

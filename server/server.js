@@ -22,30 +22,32 @@ const app = express();
 // ✅ Connect DB ONLY ONCE
 connectDB();
 
-// ✅ Middleware
+// ✅ Allowed frontend origins
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://ed-uerp.vercel.app"
+  "https://ed-uerp.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman
+// ✅ CORS config
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Postman / direct requests
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
 
-// 🔥 VERY IMPORTANT (handles preflight)
-app.options("*", cors());
+// ✅ Middleware
+app.use(cors(corsOptions));
+
+// ✅ Express 5 compatible preflight handler
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
@@ -74,15 +76,15 @@ app.get("/check-db", (req, res) => {
   });
 });
 
-// ❗ Error Handling Middleware (IMPORTANT)
+// ❗ Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("❌ Server Error:", err.stack);
   res.status(500).json({
-    message: "Something went wrong",
+    message: err.message || "Something went wrong",
   });
 });
 
-// ✅ Start Server
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
