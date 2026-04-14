@@ -1,177 +1,186 @@
-* {
-  box-sizing: border-box;
-}
+/* Attendance.css */
 
 .attendance-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
-  padding: 30px;
+  background: linear-gradient(135deg, #f4f7fb, #e9f0ff);
+  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .attendance-card {
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 950px;
   background: #ffffff;
   border-radius: 18px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.attendance-header {
-  margin-bottom: 25px;
-}
-
-.attendance-header h2 {
-  margin: 0;
+.attendance-card h2 {
+  text-align: center;
   font-size: 30px;
-  color: #1e293b;
-}
-
-.attendance-header p {
-  margin-top: 8px;
-  color: #64748b;
-  font-size: 15px;
-}
-
-.lock-message {
-  background: #fff1f2;
-  color: #dc2626;
-  padding: 12px 14px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1e3a8a;
+  font-weight: 700;
 }
 
 .error-message {
-  background: #fef2f2;
-  color: #b91c1c;
+  background: #ffe5e5;
+  color: #d93025;
   padding: 12px 14px;
   border-radius: 10px;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.attendance-controls {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
-
-.attendance-controls select {
-  flex: 1;
-  min-width: 220px;
-  padding: 12px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  margin-bottom: 18px;
   font-size: 15px;
-  outline: none;
-  background: #fff;
+  font-weight: 500;
+  text-align: center;
 }
 
-.attendance-controls select:focus {
+.attendance-card select {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+}
+
+.attendance-card select:focus {
   border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.attendance-card select:disabled {
+  background: #e5e7eb;
+  cursor: not-allowed;
 }
 
 .student-list {
-  margin-top: 10px;
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .student-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 15px;
-  padding: 14px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  background: #f8fafc;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  transition: all 0.3s ease;
 }
 
-.student-name {
+.student-row:hover {
+  background: #eff6ff;
+  transform: translateY(-2px);
+}
+
+.student-row span {
+  flex: 1;
+  min-width: 180px;
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #1f2937;
 }
 
-.attendance-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
+.student-row button {
   border: none;
+  outline: none;
   padding: 10px 18px;
   border-radius: 10px;
-  cursor: pointer;
+  font-size: 14px;
   font-weight: 600;
-  transition: 0.2s ease;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.btn:disabled {
+.student-row button:nth-of-type(1) {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.student-row button:nth-of-type(1):hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.student-row button:nth-of-type(2) {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.student-row button:nth-of-type(2):hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.student-row button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.present {
-  background: #dcfce7;
-  color: #166534;
+.student-row strong {
+  min-width: 90px;
+  text-align: right;
+  font-size: 15px;
+  color: #0f172a;
 }
 
-.absent {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.active-present {
-  background: #16a34a;
-  color: white;
-}
-
-.active-absent {
-  background: #dc2626;
-  color: white;
-}
-
-.submit-btn {
-  margin-top: 20px;
+.attendance-card > button {
   width: 100%;
+  margin-top: 24px;
+  padding: 15px;
   border: none;
-  padding: 14px;
   border-radius: 12px;
-  background: #2563eb;
-  color: white;
-  font-size: 16px;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.submit-btn:hover {
-  background: #1d4ed8;
+.attendance-card > button:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
 }
 
-.submit-btn:disabled {
+.attendance-card > button:disabled {
   background: #94a3b8;
   cursor: not-allowed;
 }
 
-.empty-text {
-  color: #64748b;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 15px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
   .attendance-page {
-    padding: 15px;
+    padding: 20px 12px;
   }
 
   .attendance-card {
-    padding: 20px;
+    padding: 20px 16px;
+  }
+
+  .attendance-card h2 {
+    font-size: 24px;
   }
 
   .student-row {
@@ -179,11 +188,17 @@
     align-items: flex-start;
   }
 
-  .attendance-buttons {
+  .student-row span {
     width: 100%;
   }
 
-  .btn {
-    flex: 1;
+  .student-row button {
+    width: 100%;
+  }
+
+  .student-row strong {
+    width: 100%;
+    text-align: left;
+    margin-left: 0 !important;
   }
 }
